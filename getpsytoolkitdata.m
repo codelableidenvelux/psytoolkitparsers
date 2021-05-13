@@ -1,5 +1,6 @@
 function [psyid, Data] = getpsytoolkitdata(psypath, test)
-% Test could be 'R_TIME'
+% Test could be 'R_TIME' '2_Back' 'TaskSwitch' 'CORSI'
+% Usage [psyid, Data] = getpsytoolkitdata(psypath, test)
 
 %% List all possibleDirectories 
 to_gen = genpath(psypath);
