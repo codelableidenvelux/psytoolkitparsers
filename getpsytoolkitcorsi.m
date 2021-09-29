@@ -16,4 +16,4 @@ Cspan = max(corsidata.Var1);
 NCorrect = sum(corsidata.Var3); 
 
 %% Number of presented trials 
-Tpresented = length(corsidata.Var3)
+Tpresented = length(corsidata.Var3);

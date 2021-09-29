@@ -15,7 +15,7 @@ digits = "";
 while x
     modx = floor(mod(x,62));
     digits = append(digits,digs(modx+1));
-    x = floor(x / base)
+    x = floor(x / base);
 end
 
 if (sign < 0)
