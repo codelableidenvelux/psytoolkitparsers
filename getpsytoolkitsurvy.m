@@ -16,7 +16,7 @@ end
 
 %% List all possibleDirectories
 to_gen = genpath(psypath);
-to_list = regexp([to_gen ';'],'(.*?);','tokens');
+to_list = regexp([to_gen ':'],'(.*?):','tokens');
 to_del = cellfun(@(x) isempty(x{1,1}), to_list);
 to_list(to_del) = [];
 
@@ -24,10 +24,10 @@ to_list(to_del) = [];
 k = 0; 
 for f = 1:length(to_list) 
     clear tmp_*
-    if exist(strcat(to_list{1,f}{1,1},'\data.csv'),'file') 
-        tmp_table = readmatrix(strcat(to_list{1,f}{1,1},'\data.csv'),'Delimiter',',', 'OutputType', 'string');        
+    if exist(fullfile(to_list{1,f}{1,1},'data.csv'),'file') 
+        tmp_table = readmatrix(fullfile(to_list{1,f}{1,1},'data.csv'),'Delimiter',',', 'OutputType', 'string');        
         % Gather the header 
-        fid  = fopen(strcat(to_list{1,f}{1,1},'\data.csv'));
+        fid  = fopen(fullfile(to_list{1,f}{1,1},'data.csv'));
         column=repmat('%s',1,n);%the number of columns
         [tmp_hdr] = textscan(fid,column,'Delimiter',',','HeaderLines',0);
         fid = fclose(fid);
@@ -89,10 +89,10 @@ for p = 1:length(psyid)
     end
     Data{p,1}.session{tt}.id = tmp_table(tt,1);
   try
-    A = readmatrix(strcat([tmp_table(tt,end)],'\data.csv'),'Delimiter',',','OutputType', 'string');
+    A = readmatrix(fullfile([tmp_table(tt,end)],'data.csv'),'Delimiter',',','OutputType', 'string');
     [L1,L2] = find(ismember(A,tmp_table(tt,2)));
     Data{p,1}.session{tt}.surveydata=transpose(A(L1,:));
-    [B1,B2,B3]=xlsread(strcat([tmp_table(tt,end)],'\data.csv'));
+    [B1,B2,B3]=xlsread(fullfile([tmp_table(tt,end)],'data.csv'));
     Data{p,1}.session{tt}.surveydata=[transpose(B2(1,:)),Data{p,1}.session{tt}.surveydata]; 
   end
     end
