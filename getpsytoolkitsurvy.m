@@ -2,6 +2,8 @@ function [psyid, Data]=getpsytoolkitsurvy(psypath, test)
 % Test could be 'phonesurvy' 'sf36'
 % Usage [psyid, Data] = getpsytoolkitsurvy(psypath, test)
 % Wenyu Wan, CODELAB, Leiden University
+% Arko Ghosh, CODELAB (edit 01/02/2023)
+
 %% set input parameter
 str = ["phonesurvy","sf36";
        "handedness","q33q36"];
@@ -16,7 +18,7 @@ end
 
 %% List all possibleDirectories
 to_gen = genpath(psypath);
-to_list = regexp([to_gen ':'],'(.*?):','tokens');
+to_list = regexp([to_gen ';'],'(.*?);','tokens');
 to_del = cellfun(@(x) isempty(x{1,1}), to_list);
 to_list(to_del) = [];
 
@@ -25,16 +27,25 @@ k = 0;
 for f = 1:length(to_list) 
     clear tmp_*
     if exist(fullfile(to_list{1,f}{1,1},'data.csv'),'file') 
-        tmp_table = readmatrix(fullfile(to_list{1,f}{1,1},'data.csv'),'Delimiter',',', 'OutputType', 'string');        
+
+
+        tmp_table_pre = readmatrix(strcat(to_list{1,f}{1,1},'\data.csv'),'Delimiter',',', 'OutputType', 'string', 'range', [1]);
+        tmp_hdrtop = tmp_table_pre(1,1:end);
+        tmp_table = tmp_table_pre(2:end,1:end); 
+
+
+        %tmp_table = readmatrix(fullfile(to_list{1,f}{1,1},'data.csv'),'Delimiter',',', 'OutputType', 'string');        
         % Gather the header 
-        fid  = fopen(fullfile(to_list{1,f}{1,1},'data.csv'));
-        column=repmat('%s',1,n);%the number of columns
-        [tmp_hdr] = textscan(fid,column,'Delimiter',',','HeaderLines',0);
-        fid = fclose(fid);
-        for h = 1:length(tmp_hdr)
-        tmp_hdrtop{h} = tmp_hdr{1,h}{1,1};   
-        end
-        % identify the different coloumns of interest
+%         fid  = fopen(fullfile(to_list{1,f}{1,1},'data.csv'));
+%         column=repmat('%s',1,n);%the number of columns
+%         [tmp_hdr] = textscan(fid,column,'Delimiter',',','HeaderLines',0);
+%         fid = fclose(fid);
+%         for h = 1:length(tmp_hdr)
+%         tmp_hdrtop{h} = tmp_hdr{1,h}{1,1};   
+%         end
+%         % identify the different coloumns of interest
+        
+
         tmp_startcol = find(cellfun(@(x) contains(x,'TIME_start'), tmp_hdrtop)==true);
         tmp_endcol = find(cellfun(@(x) contains(x,'TIME_end'), tmp_hdrtop)==true);
         tmp_idcol = find(cellfun(@(x) contains(x,'user_id'), tmp_hdrtop)==true);
