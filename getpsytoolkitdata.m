@@ -6,7 +6,7 @@ function [psyid, Data] = getpsytoolkitdata(psypath, test)
 
 %% List all possibleDirectories
 to_gen = genpath(psypath);
-to_list = regexp([to_gen ';'],'(.*?);','tokens');
+to_list = regexp([to_gen pathsep],['(.*?)' pathsep],'tokens');
 to_del = cellfun(@(x) isempty(x{1,1}), to_list);
 to_list(to_del) = [];
 
@@ -14,11 +14,11 @@ to_list(to_del) = [];
 k = 0;
 for f = 1:length(to_list);
     clear tmp_*
-    if exist(strcat(to_list{1,f}{1,1},'\data.csv'),'file');
+    if exist(fullfile(to_list{1,f}{1,1},'data.csv'),'file');
         %tmp_table = readmatrix(strcat(to_list{1,f}{1,1},'\data.csv'),'Delimiter',',', 'OutputType', 'string');
         
         
-        tmp_table_pre = readmatrix(strcat(to_list{1,f}{1,1},'\data.csv'),'Delimiter',',', 'OutputType', 'string', 'range', [1]);
+        tmp_table_pre = readmatrix(fullfile(to_list{1,f}{1,1},'data.csv'),'Delimiter',',', 'OutputType', 'string', 'range', [1]);
         tmp_hdrtop = tmp_table_pre(1,1:end);
         tmp_table = tmp_table_pre(2:end,1:end); 
         % Gather the header
@@ -101,20 +101,20 @@ for p = 1:length(psyid)
             % Note new saving format by psytoolkit introduces ./survey_data for survey
             % responses and ./experiment_data for tests
 
-            if exist(strcat([tmp_tableuse(tt,end)],'\survey_data\',tmp_tableuse(tt,3)))
-                Data{p,1}.session{tt}.info = readtable(strcat([tmp_tableuse(tt,end)],'\survey_data\',tmp_tableuse(tt,3)));
+            if exist(fullfile([tmp_tableuse(tt,end)],'survey_data',tmp_tableuse(tt,3)))
+                Data{p,1}.session{tt}.info = readtable(fullfile([tmp_tableuse(tt,end)],'survey_data',tmp_tableuse(tt,3)));
             else
                 %try % as there simply man not be session info
-                 Data{p,1}.session{tt}.info = readtable(strcat([tmp_tableuse(tt,end)],'\',tmp_tableuse(tt,3)));
+                 Data{p,1}.session{tt}.info = readtable(fullfile([tmp_tableuse(tt,end)],tmp_tableuse(tt,3)));
                 %catch
                     %display(['no session info in folder ', tmp_tableuse(tt,end)]);
                 %end
             end
 
-            if exist(strcat([tmp_tableuse(tt,end)],'\experiment_data\',tmp_tableuse(tt,2)))
-                Data{p,1}.session{tt}.vals = readtable(strcat([tmp_tableuse(tt,end)],'\experiment_data\',tmp_tableuse(tt,2)));
+            if exist(fullfile([tmp_tableuse(tt,end)],'experiment_data',tmp_tableuse(tt,2)))
+                Data{p,1}.session{tt}.vals = readtable(fullfile([tmp_tableuse(tt,end)],'experiment_data',tmp_tableuse(tt,2)));
             else
-                Data{p,1}.session{tt}.vals = readtable(strcat([tmp_tableuse(tt,end)],'\',tmp_tableuse(tt,2)));
+                Data{p,1}.session{tt}.vals = readtable(fullfile([tmp_tableuse(tt,end)],tmp_tableuse(tt,2)));
 
             end
 
