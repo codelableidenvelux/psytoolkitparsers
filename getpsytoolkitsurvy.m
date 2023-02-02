@@ -18,7 +18,7 @@ end
 
 %% List all possibleDirectories
 to_gen = genpath(psypath);
-to_list = regexp([to_gen ';'],'(.*?);','tokens');
+to_list = regexp([to_gen pathsep],['(.*?)' pathsep],'tokens');
 to_del = cellfun(@(x) isempty(x{1,1}), to_list);
 to_list(to_del) = [];
 
@@ -29,7 +29,7 @@ for f = 1:length(to_list)
     if exist(fullfile(to_list{1,f}{1,1},'data.csv'),'file') 
 
 
-        tmp_table_pre = readmatrix(strcat(to_list{1,f}{1,1},'\data.csv'),'Delimiter',',', 'OutputType', 'string', 'range', [1]);
+        tmp_table_pre = readmatrix(fullfile(to_list{1,f}{1,1},'data.csv'),'Delimiter',',', 'OutputType', 'string', 'range', [1]);
         tmp_hdrtop = tmp_table_pre(1,1:end);
         tmp_table = tmp_table_pre(2:end,1:end); 
 
