@@ -28,7 +28,6 @@ function [Same Mixed] = getpsytoolkitswitch(taskswitchdata);
 idx_color = or(strcmp(taskswitchdata.Var2, {'realColor1'}), strcmp(taskswitchdata.Var2, {'realColor2'}));
 idx_hand = strcmp(taskswitchdata.Var6, {'right'});
 idx_correct = (taskswitchdata.Var8 == 1);
-idx_switch = (taskswitchdata.Var5 == 1);
 idx_congruent = strcmp(taskswitchdata.Var4, {'congruent'});
 
 Same.color.RT_correct = [taskswitchdata.Var7(idx_color & idx_correct) idx_hand(idx_color & idx_correct) idx_congruent(idx_color & idx_correct)]; 
@@ -43,6 +42,7 @@ Same.shape.RT_incorrect = [taskswitchdata.Var7(idx_shape & ~idx_correct) idx_han
 %% Mixed 
 idx_mixed = or(strcmp(taskswitchdata.Var2, {'realMixed1'}), strcmp(taskswitchdata.Var2, {'realMixed2'}));
 idx_type = strcmp(taskswitchdata.Var3, {'shape'});
+idx_switch = [false (diff(idx_type)~=0)']'; % the first trial can be always considered non-switch, when subsequent values are the same it is not a switch.
 
 Mixed.RT_correct_switch = [taskswitchdata.Var7((idx_switch & idx_correct )&idx_mixed) ...
     idx_hand((idx_switch & idx_correct )&idx_mixed) ...
